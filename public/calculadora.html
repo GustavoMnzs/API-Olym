@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olym | Calculadora Nutricional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0D0D0D;
+      --bg-secondary: #141414;
+      --bg-card: #1A1A1A;
+      --bg-hover: #222222;
+      --bg-input: #111111;
+      --cyan: #00FFFF;
+      --cyan-dark: #00CCCC;
+      --cyan-glow: rgba(0, 255, 255, 0.15);
+      --green: #00FF88;
+      --text-primary: #FFFFFF;
+      --text-secondary: #999999;
+      --text-muted: #555555;
+      --border: #2A2A2A;
+      --border-light: #333333;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .app { display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 380px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar: Search -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg width="80" height="26" viewBox="0 0 74 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.5746 0.0693914C22.1601 -0.0867392 30.2728 0.0693914 30.2728 0.0693914C30.5238 0.0624839 31.0291 0.259427 31.0463 1.10162C31.0635 1.94433 31.2403 9.12206 31.0443 9.40729C30.8482 9.69067 30.0994 9.70706 29.9584 9.20807C29.9584 8.96912 28.3368 7.99736 27.4564 8.68951L27.4515 8.69342C26.1372 9.72762 22.89 12.2838 20.9769 22.2286C19.236 31.2779 11.8467 39.4187 4.6781 39.4903C3.53438 39.5017 3.07552 38.4081 3.57263 38.0812C6.66371 36.0481 13.093 29.6001 10.5258 28.0362L7.95935 26.4728C7.95935 26.4728 -0.236696 21.2986 0.00525328 13.0265C0.00525328 11.5534 0.178762 10.8296 0.385136 10.4845C0.591584 10.1395 1.51111 10.4845 1.51111 10.4845L1.76111 10.628C3.45165 13.4457 8.83074 18.5352 14.3529 17.0558C17.2133 16.2893 18.8114 13.3798 24.598 5.54108C25.0229 4.92345 25.0869 2.79133 21.3724 0.86529C21.3724 0.86529 20.993 0.225733 21.5746 0.0693914ZM11.8363 7.44049C13.8971 7.44049 15.5677 9.11114 15.5677 11.172C15.5675 13.2326 13.897 14.9034 11.8363 14.9034C9.77584 14.9032 8.10604 13.2325 8.10583 11.172C8.10583 9.11129 9.77571 7.44073 11.8363 7.44049Z" fill="#00FFFF"/>
+          <path d="M26 26.66C26 25.6467 26.1933 24.6867 26.58 23.78C26.9667 22.8733 27.5 22.0733 28.18 21.38C28.8733 20.6733 29.6733 20.12 30.58 19.72C31.4867 19.32 32.46 19.12 33.5 19.12C34.5267 19.12 35.4933 19.32 36.4 19.72C37.3067 20.12 38.1067 20.6733 38.8 21.38C39.5067 22.0733 40.0533 22.8733 40.44 23.78C40.84 24.6867 41.04 25.6467 41.04 26.66C41.04 27.7 40.84 28.6733 40.44 29.58C40.0533 30.4867 39.5067 31.2867 38.8 31.98C38.1067 32.66 37.3067 33.1933 36.4 33.58C35.4933 33.9667 34.5267 34.16 33.5 34.16C32.46 34.16 31.4867 33.9667 30.58 33.58C29.6733 33.1933 28.8733 32.66 28.18 31.98C27.5 31.2867 26.9667 30.4867 26.58 29.58C26.1933 28.6733 26 27.7 26 26.66ZM29 26.66C29 27.3133 29.1133 27.9267 29.34 28.5C29.58 29.06 29.9067 29.56 30.32 30C30.7467 30.4267 31.2333 30.76 31.78 31C32.34 31.24 32.9467 31.36 33.6 31.36C34.2267 31.36 34.8067 31.24 35.34 31C35.8867 30.76 36.36 30.4267 36.76 30C37.16 29.56 37.4733 29.06 37.7 28.5C37.9267 27.9267 38.04 27.3133 38.04 26.66C38.04 25.9933 37.92 25.3733 37.68 24.8C37.4533 24.2267 37.1333 23.7267 36.72 23.3C36.32 22.86 35.8467 22.52 35.3 22.28C34.7533 22.04 34.16 21.92 33.52 21.92C32.88 21.92 32.2867 22.04 31.74 22.28C31.1933 22.52 30.7133 22.86 30.3 23.3C29.8867 23.7267 29.5667 24.2267 29.34 24.8C29.1133 25.3733 29 25.9933 29 26.66ZM42.8712 18.22H45.6712V34H42.8712V18.22ZM48.6548 38.2L54.4748 25.26H56.9948L51.3548 38.2H48.6548ZM50.9948 34.04L46.7148 25.26H49.8548L53.1548 32.64L50.9948 34.04ZM60.5784 25.26L60.7984 26.8L60.7584 26.68C61.1051 26.0933 61.5384 25.64 62.0584 25.32C62.5784 24.9867 63.2051 24.82 63.9384 24.82C64.4184 24.82 64.8384 24.8867 65.1984 25.02C65.5718 25.1533 65.8851 25.3533 66.1384 25.62C66.3918 25.8733 66.5651 26.2067 66.6584 26.62L66.5584 26.64C66.9318 26.0933 67.3784 25.6533 67.8984 25.32C68.4318 24.9867 68.9851 24.82 69.5584 24.82C70.4251 24.82 71.1118 25.0667 71.6184 25.56C72.1384 26.04 72.4051 26.6667 72.4184 27.44V34H69.6384V28.6C69.6251 28.2133 69.5651 27.9 69.4584 27.66C69.3518 27.4067 69.1051 27.2667 68.7184 27.24C68.2651 27.24 67.8784 27.4 67.5584 27.72C67.2518 28.0267 67.0184 28.4267 66.8584 28.92C66.7118 29.4 66.6384 29.9 66.6384 30.42V34H63.8384V28.6C63.8251 28.2133 63.7518 27.9 63.6184 27.66C63.4984 27.4067 63.2451 27.2667 62.8584 27.24C62.4184 27.24 62.0451 27.4 61.7384 27.72C61.4451 28.0267 61.2184 28.42 61.0584 28.9C60.9118 29.38 60.8384 29.8733 60.8384 30.38V34H58.0384V25.26H60.5784Z" fill="#00FFFF"/>
+        </svg>
+        <p class="sidebar-subtitle">Calculadora Nutricional</p>
+      </div>
+
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search" class="search-input" placeholder="Buscar alimentos..." autofocus />
+      </div>
+      
+      <div class="search-filters">
+        <select id="source" class="filter-select">
+          <option value="">Todas fontes</option>
+          <option value="TACO">TACO</option>
+          <option value="TBCA">TBCA</option>
+          <option value="OFF">Open Food Facts</option>
+          <option value="SUPLEMENTOS">Suplementos</option>
+        </select>
+        <div class="results-count">
+          <span id="resultsCount">0</span> resultados
+        </div>
+      </div>
+      
+      <div id="searchResults" class="search-results"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="main-header">
+        <h1>Minha Refeição</h1>
+        <button class="clear-btn" onclick="clearAll()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+          </svg>
+          Limpar
+        </button>
+      </div>
+
+      <!-- Selected Foods Table -->
+      <div class="selected-foods-container">
+        <table class="foods-table">
+          <thead>
+            <tr>
+              <th class="col-food">Alimento</th>
+              <th class="col-portion">Porção</th>
+              <th class="col-qty">Qtd</th>
+              <th class="col-kcal">Kcal</th>
+              <th class="col-prot">Prot</th>
+              <th class="col-carb">Carb</th>
+              <th class="col-fat">Gord</th>
+              <th class="col-action"></th>
+            </tr>
+          </thead>
+          <tbody id="selectedFoods"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          <p>Busque e adicione alimentos</p>
+          <span>Os valores nutricionais serão calculados automaticamente</span>
+        </div>
+      </div>
+
+      <!-- Totals -->
+      <div id="totalsSection" class="totals-section hidden">
+        <div class="totals-grid">
+          <div class="total-card highlight">
+            <span class="total-label">Calorias</span>
+            <span class="total-value" id="totalKcal">0</span>
+            <span class="total-unit">kcal</span>
+          </div>
+          <div class="total-card">
+            <span class="total-label">Proteínas</span>
+            <span class="total-value" id="totalProt">0</span>
+            <span class="total-unit">g</span>
+          </div>
+          <div class="total-card">
+            <span class="total-label">Carboidratos</span>
+            <span class="total-value" id="totalCarb">0</span>
+            <span class="total-unit">g</span>
+          </div>
+          <div class="total-card">
+            <span class="total-label">Gorduras</span>
+            <span class="total-value" id="totalFat">0</span>
+            <span class="total-unit">g</span>
+          </div>
+          <div class="total-card">
+            <span class="total-label">Fibras</span>
+            <span class="total-value" id="totalFiber">0</span>
+            <span class="total-unit">g</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <style>
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .sidebar-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .search-box {
+      padding: 16px 20px;
+      position: relative;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 36px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px var(--cyan-glow);
+    }
+    
+    .search-input::placeholder { color: var(--text-muted); }
+    
+    .search-filters {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .filter-select {
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    
+    .filter-select:focus { outline: none; border-color: var(--cyan); }
+    
+    .results-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .results-count span { color: var(--cyan); font-weight: 600; }
+    
+    .search-results {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    
+    .search-results::-webkit-scrollbar { width: 6px; }
+    .search-results::-webkit-scrollbar-track { background: transparent; }
+    .search-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+
+  <style>
+    .food-result {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .food-result:hover { background: var(--bg-hover); }
+    
+    .food-result-info { flex: 1; min-width: 0; }
+    
+    .food-result-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .food-result-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    
+    .food-result-group {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .food-result-source {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .food-result-source.TACO, .food-result-source.TBCA {
+      background: rgba(0, 255, 255, 0.1);
+      color: var(--cyan);
+    }
+    
+    .food-result-source.OFF {
+      background: rgba(255, 165, 0, 0.1);
+      color: #ffa500;
+    }
+    
+    .food-result-source.SUPLEMENTOS {
+      background: rgba(168, 85, 247, 0.1);
+      color: #a855f7;
+    }
+    
+    .food-result-kcal {
+      text-align: right;
+      margin-left: 12px;
+    }
+    
+    .food-result-kcal-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--cyan);
+    }
+    
+    .food-result-kcal-unit {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    
+    .food-result-add {
+      width: 28px;
+      height: 28px;
+      margin-left: 12px;
+      background: var(--cyan);
+      border: none;
+      border-radius: 6px;
+      color: var(--bg-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    
+    .food-result:hover .food-result-add { opacity: 1; }
+    
+    .loading-results, .no-results {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    
+    .loading-spinner {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-top-color: var(--cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+  <style>
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .main-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    
+    .main-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .clear-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .clear-btn:hover {
+      background: rgba(255, 100, 100, 0.1);
+      border-color: #ff6464;
+      color: #ff6464;
+    }
+    
+    /* Foods Table */
+    .selected-foods-container {
+      flex: 1;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .foods-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .foods-table th {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .foods-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    
+    .col-food { width: 35%; }
+    .col-portion { width: 20%; }
+    .col-qty { width: 8%; text-align: center; }
+    .col-kcal, .col-prot, .col-carb, .col-fat { width: 8%; text-align: right; }
+    .col-action { width: 5%; text-align: center; }
+    
+    .foods-table th.col-qty,
+    .foods-table th.col-kcal,
+    .foods-table th.col-prot,
+    .foods-table th.col-carb,
+    .foods-table th.col-fat { text-align: right; }
+    
+    .food-cell-name {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    .food-cell-group {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    
+    .portion-select {
+      width: 100%;
+      padding: 8px 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    
+    .portion-select:focus { outline: none; border-color: var(--cyan); }
+</style>
+
+  <style>
+    .qty-input {
+      width: 60px;
+      padding: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      text-align: center;
+    }
+    
+    .qty-input:focus { outline: none; border-color: var(--cyan); }
+    
+    .value-kcal { color: var(--cyan); font-weight: 600; }
+    .value-prot { color: #00FF88; }
+    .value-carb { color: #FFB800; }
+    .value-fat { color: #FF6B6B; }
+    
+    .remove-btn {
+      width: 28px;
+      height: 28px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .remove-btn:hover {
+      background: rgba(255, 100, 100, 0.1);
+      border-color: #ff6464;
+      color: #ff6464;
+    }
+    
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    
+    .empty-state svg { margin-bottom: 16px; opacity: 0.5; }
+    .empty-state p { font-size: 15px; color: var(--text-secondary); margin-bottom: 4px; }
+    .empty-state span { font-size: 13px; }
+    .empty-state.hidden { display: none; }
+    
+    /* Totals */
+    .totals-section {
+      margin-top: 24px;
+      padding: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    
+    .totals-section.hidden { display: none; }
+    
+    .totals-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    
+    .total-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .total-card.highlight {
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(0, 255, 255, 0.02) 100%);
+      border-color: rgba(0, 255, 255, 0.3);
+    }
+    
+    .total-label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .total-value {
+      display: block;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    
+    .total-card.highlight .total-value { color: var(--cyan); }
+    
+    .total-unit {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    @media (max-width: 1200px) {
+      .totals-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    
+    @media (max-width: 900px) {
+      .app { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; max-height: 50vh; position: relative; }
+      .totals-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+
+  <script>
+    const API = 'http://localhost:3000';
+    let selectedFoods = [];
+    let foodsCache = {};
+
+    // Search foods
+    async function searchFoods() {
+      const q = document.getElementById('search').value;
+      const source = document.getElementById('source').value;
+      
+      const params = new URLSearchParams({ page: 1, size: 30 });
+      if (q) params.append('q', q);
+      if (source) params.append('source', source);
+
+      document.getElementById('searchResults').innerHTML = `
+        <div class="loading-results">
+          <div class="loading-spinner"></div>
+          <p>Buscando...</p>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`${API}/foods?${params}`);
+        const data = await res.json();
+        
+        document.getElementById('resultsCount').textContent = data.meta.total;
+        
+        if (data.data.length === 0) {
+          document.getElementById('searchResults').innerHTML = `
+            <div class="no-results">Nenhum alimento encontrado</div>
+          `;
+          return;
+        }
+
+        document.getElementById('searchResults').innerHTML = data.data.map(food => `
+          <div class="food-result" onclick="addFood(${food.id})">
+            <div class="food-result-info">
+              <div class="food-result-name">${food.description}</div>
+              <div class="food-result-meta">
+                <span class="food-result-group">${food.groupName || ''}</span>
+                <span class="food-result-source ${food.sourceTable}">${food.sourceTable}</span>
+              </div>
+            </div>
+            <div class="food-result-kcal">
+              <div class="food-result-kcal-value">${Math.round(food.kcal || 0)}</div>
+              <div class="food-result-kcal-unit">kcal/100g</div>
+            </div>
+            <button class="food-result-add">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </button>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('searchResults').innerHTML = `
+          <div class="no-results">Erro ao conectar com a API</div>
+        `;
+      }
+    }
+
+    // Add food to selection
+    async function addFood(id) {
+      try {
+        let cached = foodsCache[id];
+        if (!cached) {
+          const res = await fetch(`${API}/foods/${id}`);
+          const food = await res.json();
+          
+          const getNutrient = (name) => {
+            const n = food.nutrients?.find(x => x.name === name);
+            return n ? n.valuePer100g : 0;
+          };
+          
+          cached = {
+            id: food.id,
+            description: food.description,
+            groupName: food.groupName,
+            measures: food.measures || [],
+            nutrients: {
+              kcal: getNutrient('Energia'),
+              protein: getNutrient('Proteína'),
+              carbs: getNutrient('Carboidrato total'),
+              fat: getNutrient('Lipídeos'),
+              fiber: getNutrient('Fibra alimentar')
+            }
+          };
+          foodsCache[id] = cached;
+        }
+        
+        selectedFoods.push({
+          id: cached.id,
+          name: cached.description,
+          group: cached.groupName,
+          measures: [{ measureDescription: '100g', grams: 100 }, ...(cached.measures || [])],
+          selectedMeasure: 0,
+          quantity: 1,
+          nutrients: cached.nutrients
+        });
+        
+        renderSelectedFoods();
+        calculateTotals();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Remove food
+    function removeFood(index) {
+      selectedFoods.splice(index, 1);
+      renderSelectedFoods();
+      calculateTotals();
+    }
+
+    // Update portion
+    function updatePortion(index, measureIndex) {
+      selectedFoods[index].selectedMeasure = parseInt(measureIndex);
+      renderSelectedFoods();
+      calculateTotals();
+    }
+
+    // Update quantity
+    function updateQuantity(index, qty) {
+      selectedFoods[index].quantity = parseFloat(qty) || 0;
+      calculateTotals();
+      // Update only the values, not the whole table
+      updateRowValues(index);
+    }
+
+    // Calculate values for a food item
+    function calcValues(food) {
+      const measure = food.measures[food.selectedMeasure];
+      const grams = measure.grams * food.quantity;
+      const factor = grams / 100;
+      return {
+        grams,
+        kcal: food.nutrients.kcal * factor,
+        protein: food.nutrients.protein * factor,
+        carbs: food.nutrients.carbs * factor,
+        fat: food.nutrients.fat * factor,
+        fiber: food.nutrients.fiber * factor
+      };
+    }
+
+    // Update single row values
+    function updateRowValues(index) {
+      const food = selectedFoods[index];
+      const vals = calcValues(food);
+      const row = document.querySelector(`tr[data-index="${index}"]`);
+      if (row) {
+        row.querySelector('.val-kcal').textContent = Math.round(vals.kcal);
+        row.querySelector('.val-prot').textContent = vals.protein.toFixed(1);
+        row.querySelector('.val-carb').textContent = vals.carbs.toFixed(1);
+        row.querySelector('.val-fat').textContent = vals.fat.toFixed(1);
+      }
+    }
+
+    // Render selected foods table
+    function renderSelectedFoods() {
+      const tbody = document.getElementById('selectedFoods');
+      const empty = document.getElementById('emptyState');
+      const totals = document.getElementById('totalsSection');
+      
+      if (selectedFoods.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        totals.classList.add('hidden');
+        return;
+      }
+      
+      empty.classList.add('hidden');
+      totals.classList.remove('hidden');
+      
+      tbody.innerHTML = selectedFoods.map((food, i) => {
+        const vals = calcValues(food);
+        const measureOptions = food.measures.map((m, mi) => 
+          `<option value="${mi}" ${mi === food.selectedMeasure ? 'selected' : ''}>${m.measureDescription} (${m.grams}g)</option>`
+        ).join('');
+        
+        return `
+          <tr data-index="${i}">
+            <td>
+              <div class="food-cell-name">${food.name}</div>
+              <div class="food-cell-group">${food.group || ''}</div>
+            </td>
+            <td>
+              <select class="portion-select" onchange="updatePortion(${i}, this.value)">
+                ${measureOptions}
+              </select>
+            </td>
+            <td style="text-align:center">
+              <input type="number" class="qty-input" value="${food.quantity}" min="0.1" step="0.5" onchange="updateQuantity(${i}, this.value)" oninput="updateQuantity(${i}, this.value)" />
+            </td>
+            <td style="text-align:right" class="value-kcal val-kcal">${Math.round(vals.kcal)}</td>
+            <td style="text-align:right" class="value-prot val-prot">${vals.protein.toFixed(1)}</td>
+            <td style="text-align:right" class="value-carb val-carb">${vals.carbs.toFixed(1)}</td>
+            <td style="text-align:right" class="value-fat val-fat">${vals.fat.toFixed(1)}</td>
+            <td style="text-align:center">
+              <button class="remove-btn" onclick="removeFood(${i})">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Calculate totals
+    function calculateTotals() {
+      const totals = selectedFoods.reduce((acc, food) => {
+        const vals = calcValues(food);
+        return {
+          kcal: acc.kcal + vals.kcal,
+          protein: acc.protein + vals.protein,
+          carbs: acc.carbs + vals.carbs,
+          fat: acc.fat + vals.fat,
+          fiber: acc.fiber + vals.fiber
+        };
+      }, { kcal: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 });
+      
+      document.getElementById('totalKcal').textContent = Math.round(totals.kcal);
+      document.getElementById('totalProt').textContent = totals.protein.toFixed(1);
+      document.getElementById('totalCarb').textContent = totals.carbs.toFixed(1);
+      document.getElementById('totalFat').textContent = totals.fat.toFixed(1);
+      document.getElementById('totalFiber').textContent = totals.fiber.toFixed(1);
+    }
+
+    // Clear all
+    function clearAll() {
+      if (selectedFoods.length === 0) return;
+      if (confirm('Limpar todos os alimentos?')) {
+        selectedFoods = [];
+        renderSelectedFoods();
+        calculateTotals();
+      }
+    }
+
+    // Event listeners
+    let searchTimeout;
+    document.getElementById('search').addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(searchFoods, 300);
+    });
+    
+    document.getElementById('source').addEventListener('change', searchFoods);
+    
+    // Initial load
+    searchFoods();
+  </script>
+</body>
+</html>

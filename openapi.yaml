@@ -1,0 +1,740 @@
+openapi: 3.0.3
+info:
+  title: API de Alimentos e Nutrição
+  description: |
+    API REST para gestão de alimentos e composição nutricional baseada nas tabelas TACO e TBCA.
+    
+    ## Funcionalidades
+    - Consulta de informações nutricionais de alimentos
+    - Cadastro e gestão de alimentos, nutrientes e medidas caseiras
+    - Cálculo de valores nutricionais por porção
+    - Importação de dados das tabelas TACO e TBCA
+    
+    ## Autenticação
+    Endpoints administrativos requerem API Key no header `x-api-key`.
+  version: 1.0.0
+  contact:
+    name: Suporte API
+servers:
+  - url: http://localhost:3000
+    description: Servidor de desenvolvimento
+
+tags:
+  - name: Foods
+    description: Operações relacionadas a alimentos
+  - name: Nutrients
+    description: Operações relacionadas a nutrientes
+  - name: Measures
+    description: Operações relacionadas a medidas caseiras
+  - name: Admin
+    description: Operações administrativas (importação de dados)
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Chave de API para endpoints administrativos
+
+  schemas:
+    Food:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID do alimento
+          example: 1
+        description:
+          type: string
+          description: Descrição do alimento em português
+          example: "Arroz, branco, cozido"
+        groupName:
+          type: string
+          description: Grupo de alimentos
+          example: "Cereais e derivados"
+        sourceTable:
+          type: string
+          enum: [TACO, TBCA]
+          description: Tabela de origem
+          example: "TACO"
+        portionGrams:
+          type: number
+          description: Porção padrão em gramas
+          example: 100
+        createdAt:
+          type: string
+          format: date-time
+          description: Data de criação
+        updatedAt:
+          type: string
+          format: date-time
+          description: Data de atualização
+
+    FoodDetail:
+      allOf:
+        - $ref: '#/components/schemas/Food'
+        - type: object
+          properties:
+            nutrients:
+              type: array
+              items:
+                $ref: '#/components/schemas/NutrientValue'
+            measures:
+              type: array
+              items:
+                $ref: '#/components/schemas/Measure'
+
+    CreateFood:
+      type: object
+      required:
+        - description
+        - groupName
+        - sourceTable
+        - portionGrams
+      properties:
+        description:
+          type: string
+          example: "Arroz, branco, cozido"
+        groupName:
+          type: string
+          example: "Cereais e derivados"
+        sourceTable:
+          type: string
+          enum: [TACO, TBCA]
+          example: "TACO"
+        portionGrams:
+          type: number
+          example: 100
+
+    UpdateFood:
+      type: object
+      properties:
+        description:
+          type: string
+          example: "Arroz, integral, cozido"
+        groupName:
+          type: string
+          example: "Cereais e derivados"
+        sourceTable:
+          type: string
+          enum: [TACO, TBCA]
+        portionGrams:
+          type: number
+          example: 150
+
+    Nutrient:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Energia"
+        unit:
+          type: string
+          example: "kcal"
+
+    NutrientValue:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Energia"
+        unit:
+          type: string
+          example: "kcal"
+        valuePer100g:
+          type: number
+          example: 128.0
+
+    CreateNutrient:
+      type: object
+      required:
+        - name
+        - unit
+      properties:
+        name:
+          type: string
+          example: "Energia"
+        unit:
+          type: string
+          example: "kcal"
+
+    UpdateNutrient:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Proteína"
+        unit:
+          type: string
+          example: "g"
+
+    Measure:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        foodId:
+          type: integer
+          example: 1
+        measureDescription:
+          type: string
+          example: "1 colher de sopa"
+        grams:
+          type: number
+          example: 25
+
+    CreateMeasure:
+      type: object
+      required:
+        - foodId
+        - measureDescription
+        - grams
+      properties:
+        foodId:
+          type: integer
+          example: 1
+        measureDescription:
+          type: string
+          example: "1 colher de sopa"
+        grams:
+          type: number
+          example: 25
+
+    UpdateMeasure:
+      type: object
+      properties:
+        measureDescription:
+          type: string
+          example: "1 xícara"
+        grams:
+          type: number
+          example: 160
+
+    CalculateNutrition:
+      type: object
+      required:
+        - amount_grams
+      properties:
+        amount_grams:
+          type: number
+          description: Quantidade em gramas para cálculo
+          example: 150
+
+    CalculatedNutrition:
+      type: object
+      properties:
+        foodId:
+          type: integer
+          example: 1
+        foodDescription:
+          type: string
+          example: "Arroz, branco, cozido"
+        amountGrams:
+          type: number
+          example: 150
+        nutrients:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Energia"
+              unit:
+                type: string
+                example: "kcal"
+              calculatedValue:
+                type: number
+                example: 192.0
+
+    PaginatedFoods:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Food'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 100
+            page:
+              type: integer
+              example: 1
+            size:
+              type: integer
+              example: 20
+            totalPages:
+              type: integer
+              example: 5
+
+    ImportResult:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Importação TACO concluída"
+        imported:
+          type: integer
+          example: 150
+        updated:
+          type: integer
+          example: 10
+
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+
+paths:
+  /foods:
+    get:
+      tags: [Foods]
+      summary: Listar alimentos
+      description: Retorna lista paginada de alimentos com filtros opcionais
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Número da página
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+          description: Itens por página
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: Busca por nome/parte do nome
+          example: arroz
+        - name: group
+          in: query
+          schema:
+            type: string
+          description: Filtrar por grupo de alimentos
+          example: "Cereais e derivados"
+        - name: source
+          in: query
+          schema:
+            type: string
+            enum: [TACO, TBCA]
+          description: Filtrar por tabela de origem
+      responses:
+        '200':
+          description: Lista de alimentos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFoods'
+              example:
+                data:
+                  - id: 1
+                    description: "Arroz, tipo 1, cozido"
+                    groupName: "Cereais e derivados"
+                    sourceTable: "TACO"
+                    portionGrams: 100
+                meta:
+                  total: 50
+                  page: 1
+                  size: 20
+                  totalPages: 3
+
+    post:
+      tags: [Foods]
+      summary: Cadastrar alimento
+      description: Cadastra um novo alimento manualmente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFood'
+      responses:
+        '201':
+          description: Alimento criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Food'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /foods/{id}:
+    get:
+      tags: [Foods]
+      summary: Obter alimento por ID
+      description: Retorna detalhes de um alimento incluindo nutrientes e medidas caseiras
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do alimento
+      responses:
+        '200':
+          description: Alimento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodDetail'
+              example:
+                id: 1
+                description: "Arroz, tipo 1, cozido"
+                groupName: "Cereais e derivados"
+                sourceTable: "TACO"
+                portionGrams: 100
+                nutrients:
+                  - id: 1
+                    name: "Energia"
+                    unit: "kcal"
+                    valuePer100g: 128
+                  - id: 2
+                    name: "Proteína"
+                    unit: "g"
+                    valuePer100g: 2.5
+                measures:
+                  - id: 1
+                    measureDescription: "1 colher de sopa"
+                    grams: 25
+        '404':
+          description: Alimento não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      tags: [Foods]
+      summary: Atualizar alimento
+      description: Atualiza os dados de um alimento existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFood'
+      responses:
+        '200':
+          description: Alimento atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Food'
+        '404':
+          description: Alimento não encontrado
+
+    delete:
+      tags: [Foods]
+      summary: Excluir alimento
+      description: Realiza exclusão lógica (soft delete) do alimento
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Alimento excluído
+          content:
+            application/json:
+              example:
+                message: "Alimento excluído com sucesso"
+        '404':
+          description: Alimento não encontrado
+
+  /foods/{id}/calculate:
+    post:
+      tags: [Foods]
+      summary: Calcular nutrição por porção
+      description: Calcula os valores nutricionais para uma quantidade específica em gramas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID do alimento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateNutrition'
+      responses:
+        '200':
+          description: Cálculo realizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculatedNutrition'
+              example:
+                foodId: 1
+                foodDescription: "Arroz, tipo 1, cozido"
+                amountGrams: 150
+                nutrients:
+                  - name: "Energia"
+                    unit: "kcal"
+                    calculatedValue: 192
+                  - name: "Proteína"
+                    unit: "g"
+                    calculatedValue: 3.75
+        '404':
+          description: Alimento não encontrado
+
+  /nutrients:
+    get:
+      tags: [Nutrients]
+      summary: Listar nutrientes
+      description: Retorna todos os nutrientes cadastrados
+      responses:
+        '200':
+          description: Lista de nutrientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Nutrient'
+
+    post:
+      tags: [Nutrients]
+      summary: Cadastrar nutriente
+      description: Cadastra um novo nutriente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNutrient'
+      responses:
+        '201':
+          description: Nutriente criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nutrient'
+        '409':
+          description: Nutriente já existe
+
+  /nutrients/{id}:
+    get:
+      tags: [Nutrients]
+      summary: Obter nutriente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Nutriente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nutrient'
+        '404':
+          description: Nutriente não encontrado
+
+    put:
+      tags: [Nutrients]
+      summary: Atualizar nutriente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNutrient'
+      responses:
+        '200':
+          description: Nutriente atualizado
+        '404':
+          description: Nutriente não encontrado
+
+    delete:
+      tags: [Nutrients]
+      summary: Excluir nutriente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Nutriente excluído
+        '404':
+          description: Nutriente não encontrado
+
+  /measures:
+    get:
+      tags: [Measures]
+      summary: Listar medidas caseiras
+      description: Retorna todas as medidas caseiras, opcionalmente filtradas por alimento
+      parameters:
+        - name: foodId
+          in: query
+          schema:
+            type: integer
+          description: Filtrar por ID do alimento
+      responses:
+        '200':
+          description: Lista de medidas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Measure'
+
+    post:
+      tags: [Measures]
+      summary: Cadastrar medida caseira
+      description: Cadastra uma nova medida caseira para um alimento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMeasure'
+      responses:
+        '201':
+          description: Medida criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Measure'
+        '404':
+          description: Alimento não encontrado
+
+  /measures/{id}:
+    get:
+      tags: [Measures]
+      summary: Obter medida por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Medida encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Measure'
+        '404':
+          description: Medida não encontrada
+
+    put:
+      tags: [Measures]
+      summary: Atualizar medida caseira
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeasure'
+      responses:
+        '200':
+          description: Medida atualizada
+        '404':
+          description: Medida não encontrada
+
+    delete:
+      tags: [Measures]
+      summary: Excluir medida caseira
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Medida excluída
+        '404':
+          description: Medida não encontrada
+
+  /admin/import/taco:
+    post:
+      tags: [Admin]
+      summary: Importar dados TACO
+      description: Importa dados da tabela TACO a partir do arquivo taco.csv em ./data/
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Importação realizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '401':
+          description: API Key inválida
+        '500':
+          description: Erro na importação
+
+  /admin/import/tbca:
+    post:
+      tags: [Admin]
+      summary: Importar dados TBCA
+      description: Importa dados da tabela TBCA a partir do arquivo tbca.csv em ./data/
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Importação realizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+        '401':
+          description: API Key inválida
+        '500':
+          description: Erro na importação

@@ -1,0 +1,22 @@
+node_modules
+dist
+.env
+.env.local
+.env.docker
+*.log
+logs/
+.DS_Store
+
+# Backup do banco (não subir!)
+backup.sql
+*.sql
+
+# PM2
+ecosystem.config.js.bak
+
+# IDE
+.idea
+.vscode
+
+# Arquivos de build
+*.tsbuildinfo
