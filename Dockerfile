@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# Instalar OpenSSL 1.1 para compatibilidade com Prisma
+RUN apk add --no-cache openssl1.1-compat
+
 WORKDIR /app
 
 # Instalar dependências
