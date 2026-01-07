@@ -1,7 +1,7 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-# Instalar OpenSSL 1.1 para compatibilidade com Prisma
-RUN apk add --no-cache openssl1.1-compat
+# Instalar OpenSSL para Prisma
+RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
