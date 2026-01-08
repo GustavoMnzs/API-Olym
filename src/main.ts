@@ -17,18 +17,10 @@ async function bootstrap() {
   const isProduction = configService.get('NODE_ENV') === 'production';
 
   // Segurança - Helmet (headers HTTP seguros)
+  // Desabilitar CSP para páginas estáticas com scripts inline
   app.use(
     helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'"],
-          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-          fontSrc: ["'self'", "https://fonts.gstatic.com"],
-          imgSrc: ["'self'", "data:"],
-          connectSrc: ["'self'"],
-        },
-      },
+      contentSecurityPolicy: false,
       crossOriginEmbedderPolicy: false,
     }),
   );
