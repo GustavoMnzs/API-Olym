@@ -19,7 +19,16 @@ async function bootstrap() {
   // Segurança - Helmet (headers HTTP seguros)
   app.use(
     helmet({
-      contentSecurityPolicy: isProduction ? undefined : false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:"],
+          connectSrc: ["'self'"],
+        },
+      },
       crossOriginEmbedderPolicy: false,
     }),
   );
