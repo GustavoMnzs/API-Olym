@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PaginatedResponseDto, PaginationDto } from '../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../common/dto/pagination.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CalculateNutritionDto, CreateFoodDto, FoodFilterDto, UpdateFoodDto } from './dto/food.dto';
 
@@ -251,8 +251,8 @@ export class FoodsService {
       .map(({ score, ...food }) => food);
   }
 
-  async findAll(pagination: PaginationDto, filters: FoodFilterDto): Promise<PaginatedResponseDto<any>> {
-    const { page = 1, size = 20 } = pagination;
+  async findAll(filters: FoodFilterDto): Promise<PaginatedResponseDto<any>> {
+    const { page = 1, size = 20 } = filters;
 
     const where: any = { deletedAt: null };
 

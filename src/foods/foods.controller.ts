@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PaginationDto } from '../common/dto/pagination.dto';
 import {
     CalculateNutritionDto,
     CalculateNutritionResponseDto,
@@ -25,8 +24,8 @@ export class FoodsController {
   @ApiQuery({ name: 'group', required: false, description: 'Filtrar por grupo', example: 'Cereais e derivados' })
   @ApiQuery({ name: 'source', required: false, description: 'Filtrar por fonte (TACO/TBCA)', example: 'TACO' })
   @ApiResponse({ status: 200, description: 'Lista de alimentos retornada com sucesso' })
-  findAll(@Query() pagination: PaginationDto, @Query() filters: FoodFilterDto) {
-    return this.foodsService.findAll(pagination, filters);
+  findAll(@Query() filters: FoodFilterDto) {
+    return this.foodsService.findAll(filters);
   }
 
   @Get(':id')

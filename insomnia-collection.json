@@ -1,0 +1,523 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-01-07T23:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_olym_food_api",
+      "parentId": null,
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "name": "API Olym Food",
+      "description": "API de Alimentos e Nutrição - Olym",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_olym_food_api",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "https://api.olym.com.br",
+        "api_key": "fc943a9722fb36c29a57ebf5ffb2b0592d47c7d7f434a07593b17310e018a97f",
+        "supabase_token": "SEU_TOKEN_SUPABASE_AQUI"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "api_key", "supabase_token"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1704668400000,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_health",
+      "parentId": "wrk_olym_food_api",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "name": "🏥 Health",
+      "description": "Health checks (público)",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_foods",
+      "parentId": "wrk_olym_food_api",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "name": "🍎 Foods",
+      "description": "Endpoints de alimentos",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -900,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_nutrients",
+      "parentId": "wrk_olym_food_api",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "name": "💊 Nutrients",
+      "description": "Endpoints de nutrientes",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -800,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_measures",
+      "parentId": "wrk_olym_food_api",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "name": "📏 Measures",
+      "description": "Endpoints de medidas caseiras",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -700,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_health",
+      "parentId": "fld_health",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/health",
+      "name": "Health Check",
+      "description": "Verificar status da API (público)",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_list",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods",
+      "name": "GET Listar Alimentos",
+      "description": "Lista todos os alimentos com paginação",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {"name": "page", "value": "1", "disabled": false},
+        {"name": "size", "value": "20", "disabled": false}
+      ],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_search",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods",
+      "name": "GET Buscar Alimentos",
+      "description": "Busca alimentos por nome",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {"name": "q", "value": "arroz", "disabled": false},
+        {"name": "size", "value": "20", "disabled": false}
+      ],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -950,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_filter_group",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods",
+      "name": "GET Filtrar por Grupo",
+      "description": "Filtra alimentos por grupo alimentar",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {"name": "group", "value": "Cereais e derivados", "disabled": false},
+        {"name": "size", "value": "20", "disabled": false}
+      ],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -940,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_filter_source",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods",
+      "name": "GET Filtrar por Fonte",
+      "description": "Filtra alimentos por fonte (TACO ou TBCA)",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {"name": "source", "value": "TACO", "disabled": false},
+        {"name": "size", "value": "20", "disabled": false}
+      ],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -930,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_by_id",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods/1",
+      "name": "GET Buscar por ID",
+      "description": "Retorna detalhes de um alimento com nutrientes e medidas",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -920,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_create",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods",
+      "name": "POST Criar Alimento",
+      "description": "Cadastra um novo alimento",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Arroz, integral, cozido\",\n  \"groupName\": \"Cereais e derivados\",\n  \"sourceTable\": \"TACO\",\n  \"portionGrams\": 100\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -910,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_update",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods/1",
+      "name": "PUT Atualizar Alimento",
+      "description": "Atualiza um alimento existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Arroz, branco, cozido (atualizado)\",\n  \"portionGrams\": 150\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -900,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_delete",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods/1",
+      "name": "DELETE Excluir Alimento",
+      "description": "Exclui um alimento (soft delete)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -890,
+      "_type": "request"
+    },
+    {
+      "_id": "req_foods_calculate",
+      "parentId": "fld_foods",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/foods/1/calculate",
+      "name": "POST Calcular Nutrição",
+      "description": "Calcula valores nutricionais para uma quantidade em gramas",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"amount_grams\": 150\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -880,
+      "_type": "request"
+    },
+    {
+      "_id": "req_nutrients_list",
+      "parentId": "fld_nutrients",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/nutrients",
+      "name": "GET Listar Nutrientes",
+      "description": "Lista todos os nutrientes",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_nutrients_by_id",
+      "parentId": "fld_nutrients",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/nutrients/1",
+      "name": "GET Buscar por ID",
+      "description": "Retorna um nutriente específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -950,
+      "_type": "request"
+    },
+    {
+      "_id": "req_nutrients_create",
+      "parentId": "fld_nutrients",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/nutrients",
+      "name": "POST Criar Nutriente",
+      "description": "Cadastra um novo nutriente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Vitamina E\",\n  \"unit\": \"mg\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -940,
+      "_type": "request"
+    },
+    {
+      "_id": "req_nutrients_update",
+      "parentId": "fld_nutrients",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/nutrients/1",
+      "name": "PUT Atualizar Nutriente",
+      "description": "Atualiza um nutriente existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Energia (atualizado)\",\n  \"unit\": \"kcal\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -930,
+      "_type": "request"
+    },
+    {
+      "_id": "req_nutrients_delete",
+      "parentId": "fld_nutrients",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/nutrients/1",
+      "name": "DELETE Excluir Nutriente",
+      "description": "Remove um nutriente",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -920,
+      "_type": "request"
+    },
+    {
+      "_id": "req_measures_list",
+      "parentId": "fld_measures",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/measures",
+      "name": "GET Listar Medidas",
+      "description": "Lista todas as medidas caseiras",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "_type": "request"
+    },
+    {
+      "_id": "req_measures_by_food",
+      "parentId": "fld_measures",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/measures",
+      "name": "GET Medidas por Alimento",
+      "description": "Lista medidas de um alimento específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {"name": "foodId", "value": "1", "disabled": false}
+      ],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -950,
+      "_type": "request"
+    },
+    {
+      "_id": "req_measures_by_id",
+      "parentId": "fld_measures",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/measures/1",
+      "name": "GET Buscar por ID",
+      "description": "Retorna uma medida específica",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -940,
+      "_type": "request"
+    },
+    {
+      "_id": "req_measures_create",
+      "parentId": "fld_measures",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/measures",
+      "name": "POST Criar Medida",
+      "description": "Cadastra uma nova medida caseira",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"foodId\": 1,\n  \"measureDescription\": \"1 colher de sopa\",\n  \"grams\": 25\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -930,
+      "_type": "request"
+    },
+    {
+      "_id": "req_measures_update",
+      "parentId": "fld_measures",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/measures/1",
+      "name": "PUT Atualizar Medida",
+      "description": "Atualiza uma medida existente",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"measureDescription\": \"1 xícara\",\n  \"grams\": 160\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"},
+        {"name": "Content-Type", "value": "application/json"}
+      ],
+      "authentication": {},
+      "metaSortKey": -920,
+      "_type": "request"
+    },
+    {
+      "_id": "req_measures_delete",
+      "parentId": "fld_measures",
+      "modified": 1704668400000,
+      "created": 1704668400000,
+      "url": "{{ _.base_url }}/measures/1",
+      "name": "DELETE Excluir Medida",
+      "description": "Remove uma medida caseira",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {"name": "x-api-key", "value": "{{ _.api_key }}"},
+        {"name": "Authorization", "value": "Bearer {{ _.supabase_token }}"}
+      ],
+      "authentication": {},
+      "metaSortKey": -910,
+      "_type": "request"
+    }
+  ]
+}

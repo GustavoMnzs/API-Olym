@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class CreateFoodDto {
   @ApiProperty({ description: 'Descrição do alimento em português', example: 'Arroz, branco, cozido' })
@@ -48,6 +49,21 @@ export class UpdateFoodDto {
 }
 
 export class FoodFilterDto {
+  @ApiPropertyOptional({ description: 'Número da página', default: 1, minimum: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number = 1;
+
+  @ApiPropertyOptional({ description: 'Quantidade de itens por página', default: 20, minimum: 1, maximum: 100 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  size?: number = 20;
+
   @ApiPropertyOptional({ description: 'Busca por nome/parte do nome', example: 'arroz' })
   @IsOptional()
   @IsString()
